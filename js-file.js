@@ -17,6 +17,9 @@ let operatorCallLive = false;
 let equalFirst = false;
 let equalStart = false;
 
+//FINAL BUGS
+// trailing zeros on decimal display....see line 126 - add a decimal counter?
+// Add keyboard functionality
 
 // Set up operator button functionality
 //     Store an index number that tracks which operator button was clicked
@@ -106,6 +109,7 @@ for (let i = 0; i < numericButton.length; i++) {
     numericButtonItem.addEventListener('click', () => {
         if (refreshKeyStroke){
             displayNumber = "0";
+            decimalPressedIndicator = false;
             refreshKeyStroke = false;
         }
         if (operatorCallLive) {
@@ -118,8 +122,15 @@ for (let i = 0; i < numericButton.length; i++) {
         if (displayNumber[0] == "0" && displayNumber[1] != "."){
             displayNumber = displayNumber.substr(1, displayNumber.length - 1);
         }
-        displayNumberPresentation.innerHTML = Number(displayNumber);
+        if (decimalPressedIndicator && numericButtonItem.innerText == "0") {
+            displayNumberPresentation.innerHTML = displayNumber;
+        } else {
+            displayNumberPresentation.innerHTML = Number(displayNumber);
+        }
         equalFirst = true
+        if (firstOperationCall) {
+            equalFirst = false
+        }
     });
 };
 
@@ -129,6 +140,7 @@ const decimalButton = document.querySelector('.decimal-button');
 decimalButton.addEventListener('click', () => {
     if (refreshKeyStroke){
         displayNumber = "0";
+        decimalPressedIndicator = false;
         refreshKeyStroke = false;
     }
     if (operatorCallLive) {
@@ -143,6 +155,9 @@ decimalButton.addEventListener('click', () => {
         displayNumberPresentation.innerHTML = displayNumber;
     }
     equalFirst = true
+    if (firstOperationCall) {
+        equalFirst = false
+    }
 });
 
 // Set up delete button functionality
@@ -150,6 +165,7 @@ const deleteButton = document.querySelector('.delete-button');
 deleteButton.addEventListener('click', () => {
     if (refreshKeyStroke){
         displayNumber = "0";
+        decimalPressedIndicator = false;
         refreshKeyStroke = false;
     }
     if (displayNumber.slice(-1) == ".") {
@@ -170,6 +186,9 @@ deleteButton.addEventListener('click', () => {
         }
     }
     equalFirst = true
+    if (firstOperationCall) {
+        equalFirst = false
+    }
 });
 
 // Set up +/- button functionality
@@ -177,6 +196,7 @@ const negButton = document.querySelector('.plus-minus');
 negButton.addEventListener('click', () => {
     if (refreshKeyStroke){
         displayNumber = "0";
+        decimalPressedIndicator = false;
         refreshKeyStroke = false;
     }
     if (operatorCallLive) {
@@ -196,6 +216,9 @@ negButton.addEventListener('click', () => {
         displayNumberPresentation.innerHTML = Number(displayNumber);
     }
     equalFirst = true
+    if (firstOperationCall) {
+        equalFirst = false
+    }
 });
 
 // Set up escape button functionality
@@ -225,13 +248,14 @@ equalButton.addEventListener('click', () => {
         displayNumberPresentation.innerHTML = displayNumber;
         firstOperationCall = true;
         equalFirst = false;
+        refreshKeyStroke = true;
     } else if (equalStart) {
         operandFirst = displayNumber;
         displayNumber = equate();
         displayOperationPresentation.innerHTML = operandFirst + " " + operationTask[operationIndex] + " " + operandSecond + " =";
         displayNumberPresentation.innerHTML = displayNumber;
         firstOperationCall = true;
+        refreshKeyStroke = true;
     }
-    refreshKeyStroke = true;
 });
 

@@ -16,11 +16,8 @@ let operatorCallLive = false;
 // Set up equal button to prevent from clicking
 let equalFirst = false;
 let equalStart = false;
-let deleteStart = false;
+let equalPressed = false;
 
-//FINAL BUGS
-// trailing zeros on decimal display....see line 126 - add a decimal counter?
-// Add keyboard functionality
 
 // Set up operator button functionality
 //     Store an index number that tracks which operator button was clicked
@@ -193,7 +190,7 @@ deleteButton.addEventListener('click', () => {
     if (firstOperationCall) {
         equalFirst = false
     }
-    if (!deleteStart) {
+    if (!equalPressed) {
         equalFirst = true
     }
 });
@@ -239,7 +236,7 @@ escapeButton.addEventListener('click', () => {
     operatorCallLive = false;
     equalFirst = true
     equalStart = false
-    deleteStart = false
+    equalPressed = false
     displayOperationPresentation.innerHTML = ""
     displayNumberPresentation.innerHTML = displayNumber;
 });
@@ -255,6 +252,7 @@ equalButton.addEventListener('click', () => {
         displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex] + " " + Number(operandSecond) + " =";
         displayNumberPresentation.innerHTML = displayNumber;
         firstOperationCall = true;
+        operatorCallLive = false;
         equalFirst = false;
         refreshKeyStroke = true;
     } else if (equalStart) {
@@ -262,8 +260,9 @@ equalButton.addEventListener('click', () => {
         displayNumber = equate();
         displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex] + " " + Number(operandSecond) + " =";
         displayNumberPresentation.innerHTML = displayNumber;
+        operatorCallLive = false;
         firstOperationCall = true;
         refreshKeyStroke = true;
     }
-    deleteStart = true;
+    equalPressed = true;
 });

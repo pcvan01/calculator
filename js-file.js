@@ -16,6 +16,7 @@ let operatorCallLive = false;
 // Set up equal button to prevent from clicking
 let equalFirst = false;
 let equalStart = false;
+let deleteStart = false;
 
 //FINAL BUGS
 // trailing zeros on decimal display....see line 126 - add a decimal counter?
@@ -40,7 +41,7 @@ for (let i = 0; i < operatorButton.length; i++) {
                 operationIndex = 4; 
             }
             operandFirst = displayNumber;
-            displayOperationPresentation.innerHTML = operandFirst + " " + operationTask[operationIndex];
+            displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
             operatorCallLive = true;
         } else if (!operatorCallLive && !firstOperationCall) {
             operandSecond = displayNumber;
@@ -59,7 +60,7 @@ for (let i = 0; i < operatorButton.length; i++) {
             }
             refreshKeyStroke = true;
             operatorCallLive = true;
-            displayOperationPresentation.innerHTML = operandFirst + " " + operationTask[operationIndex];
+            displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
             displayNumberPresentation.innerHTML = displayNumber;
         } else if (operatorCallLive) {
             if (operatorButtonItem.innerText == "/") {
@@ -73,7 +74,10 @@ for (let i = 0; i < operatorButton.length; i++) {
             } else if (operatorButtonItem.innerText == "^") {
                 operationIndex = 4; 
             }
-            displayOperationPresentation.innerHTML = operandFirst + " " + operationTask[operationIndex];
+            displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
+        }
+        if (!equalStart) {
+            refreshKeyStroke = true;
         }
         equalStart = true;
         equalFirst = true
@@ -189,6 +193,9 @@ deleteButton.addEventListener('click', () => {
     if (firstOperationCall) {
         equalFirst = false
     }
+    if (!deleteStart) {
+        equalFirst = true
+    }
 });
 
 // Set up +/- button functionality
@@ -232,6 +239,7 @@ escapeButton.addEventListener('click', () => {
     operatorCallLive = false;
     equalFirst = true
     equalStart = false
+    deleteStart = false
     displayOperationPresentation.innerHTML = ""
     displayNumberPresentation.innerHTML = displayNumber;
 });
@@ -244,7 +252,7 @@ equalButton.addEventListener('click', () => {
     if (equalFirst && equalStart) {
         operandSecond = displayNumber;
         displayNumber = equate();
-        displayOperationPresentation.innerHTML = operandFirst + " " + operationTask[operationIndex] + " " + operandSecond + " =";
+        displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex] + " " + Number(operandSecond) + " =";
         displayNumberPresentation.innerHTML = displayNumber;
         firstOperationCall = true;
         equalFirst = false;
@@ -252,9 +260,10 @@ equalButton.addEventListener('click', () => {
     } else if (equalStart) {
         operandFirst = displayNumber;
         displayNumber = equate();
-        displayOperationPresentation.innerHTML = operandFirst + " " + operationTask[operationIndex] + " " + operandSecond + " =";
+        displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex] + " " + Number(operandSecond) + " =";
         displayNumberPresentation.innerHTML = displayNumber;
         firstOperationCall = true;
         refreshKeyStroke = true;
     }
+    deleteStart = true;
 });

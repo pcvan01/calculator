@@ -258,4 +258,3 @@ equalButton.addEventListener('click', () => {
         refreshKeyStroke = true;
     }
 });
-

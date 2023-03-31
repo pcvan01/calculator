@@ -98,7 +98,6 @@ function equate(){
     return result
 }
 
-
 // Query HTML to display the numbers and operation of numbers
 const displayNumberPresentation = document.querySelector('.display-number');
 const displayOperationPresentation = document.querySelector('.stored-operation');
@@ -120,14 +119,16 @@ for (let i = 0; i < numericButton.length; i++) {
             firstOperationCall = false;
         }
         displayNumber = displayNumber + numericButtonItem.innerText;
-        if (displayNumber[0] == "0" && displayNumber[1] != "."){
-            displayNumber = displayNumber.substr(1, displayNumber.length - 1);
+        if (displayNumber.length > 20){
+            displayNumber = displayNumber.substring(0, displayNumber.length - 1);
+        } else if (!decimalPressedIndicator && displayNumber[0] == "0"){
+            displayNumber = displayNumber.substring(1, displayNumber.length);
+        } else if (!decimalPressedIndicator && displayNumber.substring(0,2) == "-0"){
+            displayNumber = "-" + displayNumber.substring(2, displayNumber.length);
+        }else if (displayNumber == "00" || displayNumber == "-00"){
+            displayNumber = displayNumber.substring(0, displayNumber.length - 1);
         }
-        if (decimalPressedIndicator && numericButtonItem.innerText == "0") {
-            displayNumberPresentation.innerHTML = displayNumber;
-        } else {
-            displayNumberPresentation.innerHTML = Number(displayNumber);
-        }
+        displayNumberPresentation.innerHTML = displayNumber;
         equalFirst = true
         if (firstOperationCall) {
             equalFirst = false

@@ -1,30 +1,38 @@
-// Set up the first operand and second operand
+// Set up the first operand and second operand for operations
 let operandFirst = 0;
 let operandSecond = 0;
 
 // Set up display number as you type digits
-// Only allow for a single decimal to be pressed
+// Set up boolean to only allow for a single decimal to be pressed
+// Set up boolean to refresh display number after operations
 let displayNumber = "0";
 let decimalPressedIndicator = false;
 let refreshKeyStroke = false;
 
-// Set operator list indicators [divide, multiply, subtract, add]
+// Set up operator list indicators [divide, multiply, subtract, add, power]
+// Set up index to track operator last clicked
+// Set up boolean to track when operator button is first clicked after an equal sign is clicked
+// Set up boolean to track if operator will be adjust without calculation
 let operationTask = ["/", "x", "-", "+", "^"];
+let operationIndex = 0;
 let firstOperationCall = true;
 let operatorCallLive = false;
 
-// Set up equal button to prevent from clicking
+// Set up boolean to track when equal is first clicked
+// Set up boolean to track when user is allowed to first click start button
+// Set up boolean to track when equal has been presed at least once - for unique delete button fuctionality
 let equalFirst = false;
 let equalStart = false;
 let equalPressed = false;
 
 
 // Set up operator button functionality
-//     Store an index number that tracks which operator button was clicked
 const operatorButton = document.querySelectorAll('.operator-button');
 for (let i = 0; i < operatorButton.length; i++) {
     let operatorButtonItem = operatorButton[i];
     operatorButtonItem.addEventListener('click', () => {
+        // Assign the first operand to the display number when the operand is clicked for the fist time
+        //   and display the operand and clicked operator
         if (!operatorCallLive && firstOperationCall) {
             if (operatorButtonItem.innerText == "/") {
                 operationIndex = 0;
@@ -40,6 +48,8 @@ for (let i = 0; i < operatorButton.length; i++) {
             operandFirst = displayNumber;
             displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
             operatorCallLive = true;
+        // If it's not the first operation call and and operator was not the last clicked butt
+        //   set the second operand to the display number, calculate, and then display    
         } else if (!operatorCallLive && !firstOperationCall) {
             operandSecond = displayNumber;
             operandFirst = equate()
@@ -59,6 +69,7 @@ for (let i = 0; i < operatorButton.length; i++) {
             operatorCallLive = true;
             displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
             displayNumberPresentation.innerHTML = displayNumber;
+        // If an operator button was last clicked, simply adjust the operator and display
         } else if (operatorCallLive) {
             if (operatorButtonItem.innerText == "/") {
                 operationIndex = 0;

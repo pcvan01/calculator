@@ -40,17 +40,14 @@
     display: flex;
     box-sizing: border-box;
     margin-bottom: 2px;
-    padding-left: 6px;
-    padding-right: 6px;
     justify-content: center; 
-
 }
 
 .standard {
     width: 4rem;
     height: 3.7rem;
     font-size: 1.2rem;
-    margin: 5px;
+    margin: 7px;
     border: solid;
     border-width: 0.25px;
     border-radius: 5px;

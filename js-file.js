@@ -25,72 +25,9 @@ let equalFirst = false;
 let equalStart = false;
 let equalPressed = false;
 
-
-// Set up operator button functionality
-const operatorButton = document.querySelectorAll('.operator-button');
-for (let i = 0; i < operatorButton.length; i++) {
-    let operatorButtonItem = operatorButton[i];
-    operatorButtonItem.addEventListener('click', () => {
-        // Assign the first operand to the display number when the operand is clicked for the fist time
-        //   and display the operand and clicked operator
-        if (!operatorCallLive && firstOperationCall) {
-            if (operatorButtonItem.innerText == "/") {
-                operationIndex = 0;
-            } else if (operatorButtonItem.innerText == "x") {
-                operationIndex = 1; 
-            } else if (operatorButtonItem.innerText == "-") {
-                operationIndex = 2; 
-            } else if (operatorButtonItem.innerText == "+") {
-                operationIndex = 3; 
-            } else if (operatorButtonItem.innerText == "^") {
-                operationIndex = 4; 
-            }
-            operandFirst = displayNumber;
-            displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
-            operatorCallLive = true;
-        // If it's not the first operation call and and operator was not the last clicked butt
-        //   set the second operand to the display number, calculate, and then display    
-        } else if (!operatorCallLive && !firstOperationCall) {
-            operandSecond = displayNumber;
-            operandFirst = equate()
-            displayNumber = operandFirst
-            if (operatorButtonItem.innerText == "/") {
-                operationIndex = 0;
-            } else if (operatorButtonItem.innerText == "x") {
-                operationIndex = 1; 
-            } else if (operatorButtonItem.innerText == "-") {
-                operationIndex = 2; 
-            } else if (operatorButtonItem.innerText == "+") {
-                operationIndex = 3; 
-            } else if (operatorButtonItem.innerText == "^") {
-                operationIndex = 4; 
-            }
-            refreshKeyStroke = true;
-            operatorCallLive = true;
-            displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
-            displayNumberPresentation.innerHTML = displayNumber;
-        // If an operator button was last clicked, simply adjust the operator and display
-        } else if (operatorCallLive) {
-            if (operatorButtonItem.innerText == "/") {
-                operationIndex = 0;
-            } else if (operatorButtonItem.innerText == "x") {
-                operationIndex = 1; 
-            } else if (operatorButtonItem.innerText == "-") {
-                operationIndex = 2; 
-            } else if (operatorButtonItem.innerText == "+") {
-                operationIndex = 3; 
-            } else if (operatorButtonItem.innerText == "^") {
-                operationIndex = 4; 
-            }
-            displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
-        }
-        if (!equalStart) {
-            refreshKeyStroke = true;
-        }
-        equalStart = true;
-        equalFirst = true
-    });
-};
+// Query HTML to display the numbers and operation of numbers
+const displayNumberPresentation = document.querySelector('.display-number');
+const displayOperationPresentation = document.querySelector('.stored-operation');
 
 // Set up function that equates operation
 function equate(){
@@ -109,26 +46,82 @@ function equate(){
     return result
 }
 
-// Query HTML to display the numbers and operation of numbers
-const displayNumberPresentation = document.querySelector('.display-number');
-const displayOperationPresentation = document.querySelector('.stored-operation');
+// Define function that resets display
+function resetDisplay() {
+    if (refreshKeyStroke){
+        displayNumber = "0";
+        decimalPressedIndicator = false;
+        refreshKeyStroke = false;
+    }
+}
+
+// Define function the resets display after an operator button is clicked
+function resetDisplayAfterOperator() {
+    if (operatorCallLive) {
+        displayNumber = "0";
+        operatorCallLive = false;
+        decimalPressedIndicator = false;
+        firstOperationCall = false;
+    }
+}
+
+// Set up operator button functionality
+const operatorButton = document.querySelectorAll('.operator-button');
+for (let i = 0; i < operatorButton.length; i++) {
+    let operatorButtonItem = operatorButton[i];
+    operatorButtonItem.addEventListener('click', () => {
+        // Deifne a function to identify what operator button was clicked
+        function getOperatorClicked() {
+            if (operatorButtonItem.innerText == "/") {
+                operationIndex = 0;
+            } else if (operatorButtonItem.innerText == "x") {
+                operationIndex = 1; 
+            } else if (operatorButtonItem.innerText == "-") {
+                operationIndex = 2; 
+            } else if (operatorButtonItem.innerText == "+") {
+                operationIndex = 3; 
+            } else if (operatorButtonItem.innerText == "^") {
+                operationIndex = 4; 
+            }
+        }
+        // Assign the first operand to the display number when the operand is clicked for the fist time
+        //   and display the operand and clicked operator
+        if (!operatorCallLive && firstOperationCall) {
+            getOperatorClicked()
+            operandFirst = displayNumber;
+            operatorCallLive = true;
+            displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
+        // If it's not the first operation call and and operator was not the last clicked butt
+        //   set the second operand to the display number, calculate, and then display    
+        } else if (!operatorCallLive && !firstOperationCall) {
+            operandSecond = displayNumber;
+            operandFirst = equate()
+            displayNumber = operandFirst
+            getOperatorClicked()
+            refreshKeyStroke = true;
+            operatorCallLive = true;
+            displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
+            displayNumberPresentation.innerHTML = displayNumber;
+        // If an operator button was last clicked, simply adjust the operator and display
+        } else if (operatorCallLive) {
+            getOperatorClicked()
+            displayOperationPresentation.innerHTML = Number(operandFirst) + " " + operationTask[operationIndex];
+        }
+        if (!equalStart) {
+            refreshKeyStroke = true;
+        }
+        equalStart = true;
+        equalFirst = true
+    });
+};
 
 // Set up number buttons to update the displayNumber
 const numericButton = document.querySelectorAll('.numeric-button');
 for (let i = 0; i < numericButton.length; i++) {
     let numericButtonItem = numericButton[i];
     numericButtonItem.addEventListener('click', () => {
-        if (refreshKeyStroke){
-            displayNumber = "0";
-            decimalPressedIndicator = false;
-            refreshKeyStroke = false;
-        }
-        if (operatorCallLive) {
-            displayNumber = "0";
-            operatorCallLive = false;
-            decimalPressedIndicator = false;
-            firstOperationCall = false;
-        }
+        resetDisplay();
+        resetDisplayAfterOperator()
         displayNumber = displayNumber + numericButtonItem.innerText;
         if (displayNumber.length > 20){
             displayNumber = displayNumber.substring(0, displayNumber.length - 1);
@@ -151,17 +144,8 @@ for (let i = 0; i < numericButton.length; i++) {
 //     Switch will flip to ensure the displayNumber is assembled correctly
 const decimalButton = document.querySelector('.decimal-button');
 decimalButton.addEventListener('click', () => {
-    if (refreshKeyStroke){
-        displayNumber = "0";
-        decimalPressedIndicator = false;
-        refreshKeyStroke = false;
-    }
-    if (operatorCallLive) {
-        displayNumber = "0";
-        operatorCallLive = false;
-        decimalPressedIndicator = false;
-        firstOperationCall = false;
-    }
+    resetDisplay();
+    resetDisplayAfterOperator()
     if (!decimalPressedIndicator) {
         displayNumber = displayNumber + ".";
         decimalPressedIndicator = true;
@@ -176,11 +160,7 @@ decimalButton.addEventListener('click', () => {
 // Set up delete button functionality
 const deleteButton = document.querySelector('.delete-button');
 deleteButton.addEventListener('click', () => {
-    if (refreshKeyStroke){
-        displayNumber = "0";
-        decimalPressedIndicator = false;
-        refreshKeyStroke = false;
-    }
+    resetDisplay();
     if (displayNumber.slice(-1) == ".") {
         decimalPressedIndicator = false
     }
@@ -210,17 +190,8 @@ deleteButton.addEventListener('click', () => {
 // Set up +/- button functionality
 const negButton = document.querySelector('.plus-minus');
 negButton.addEventListener('click', () => {
-    if (refreshKeyStroke){
-        displayNumber = "0";
-        decimalPressedIndicator = false;
-        refreshKeyStroke = false;
-    }
-    if (operatorCallLive) {
-        displayNumber = "0";
-        operatorCallLive = false;
-        decimalPressedIndicator = false;
-        firstOperationCall = false;
-    }
+    resetDisplay();
+    resetDisplayAfterOperator()
     if (displayNumber[0] != "-") {
         displayNumber = "-" + displayNumber
     } else {
